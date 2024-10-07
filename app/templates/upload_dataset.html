@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="/static/styles/loading.css">
+        <link rel="stylesheet" href="/static/styles/cards.css">
 
         <script src='/static/scripts/uploading.js' defer></script>
     </head>
@@ -20,6 +21,11 @@
                 <input name="dataset" type="file">
                 <input type="submit">
             </form>
+            <div id="confirmation-card">
+                <p>O dataset <span id="dataset-name"></span> já existe. Deseja substituir?</p>
+                <button id="confirm-btn">Confirmar</button>
+                <button id="cancel-btn">Cancelar</button>
+            </div>
         </content>
     </body>
 </html>

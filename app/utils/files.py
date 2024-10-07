@@ -2,6 +2,9 @@ import os
 import shutil
 
 from zipfile import ZipFile
+
+DATASETS_FOLDER = os.path.join('app', 'static', 'datasets')
+os.makedirs(DATASETS_FOLDER, exist_ok=True)
         
 def list_dir(file: ZipFile) -> dict:
     path = {'': []}
@@ -50,6 +53,8 @@ def copy_dataset(dataset_path: str, name:str):
                 os.remove(new_dataset_path)
                 return
     
-    destiny = os.path.join('app', 'static', 'datasets')
-    os.makedirs(destiny, exist_ok=True)
-    shutil.copy(dataset_path, os.path.join(destiny, name + '.zip'))
+    path = os.path.join(DATASETS_FOLDER, name + '.zip')
+    shutil.copy(dataset_path, path)
+    
+def dataset_exist(dataset_name: str) -> bool:
+    return dataset_name in os.listdir(DATASETS_FOLDER)

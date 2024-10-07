@@ -1,9 +1,8 @@
 import os
 import uuid
-import time
 
 from app.utils import templates, files
-from fastapi import APIRouter, File, Form, Request, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse
 
 router = APIRouter(prefix='/upload')
@@ -14,6 +13,13 @@ async def test(request: Request):
 
 @router.post("/dataset")
 async def upload_file(name: str = Form(...), dataset: UploadFile = File(...)):
+    if files.dataset_exist(name + '.zip'):
+        raise HTTPException(status_code=400, detail="Dataset already exists")
+    
+    await force_upload_file(name, dataset)
+   
+@router.post('/dataset/force') 
+async def force_upload_file(name: str = Form(...), dataset: UploadFile = File(...)):
     os.makedirs("temp/", exist_ok=True)
     
     file_id = str(uuid.uuid4())
@@ -26,7 +32,5 @@ async def upload_file(name: str = Form(...), dataset: UploadFile = File(...)):
         files.copy_dataset(zip_path, name)
     finally:
         os.remove(zip_path)
-        
-    time.sleep(5)
         
     return {name: dataset.filename}
