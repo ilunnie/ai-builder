@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Upload dataset</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="/static/styles/loading.css">
+
+        <script src='/static/scripts/uploading.js' defer></script>
+    </head>
+    <body>
+        <content>
+            <h2>Enviar dataset</h2>
+            <div id="loading">Enviando...</div>
+            <form class="upload" action="/upload/dataset", enctype="multipart/form-data" method="post">
+                <input name="name" type="text">
+                <input name="dataset" type="file">
+                <input type="submit">
+            </form>
+        </content>
+    </body>
+</html>
