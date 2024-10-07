@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from zipfile import ZipFile
         
 def list_dir(file: ZipFile) -> dict:
@@ -24,3 +27,29 @@ def list_dir(file: ZipFile) -> dict:
     return path
             
 ZipFile.list_dir = list_dir
+
+def copy_dataset(dataset_path: str, name:str):
+    with ZipFile(dataset_path, 'r') as zipf:
+        dir_paths = zipf.list_dir()
+        if len(dir_paths.keys()) == 2 and dir_paths[''] == []:
+            folder = next((key for key in dir_paths.keys() if key != ''), None)
+            if folder is None:
+                raise Exception('Dataset not founded.')
+            files = [f for f in zipf.namelist() if f.startswith(folder + '/')]
+            
+            new_dataset_path = dataset_path + '_temp'
+            with ZipFile(new_dataset_path, 'w') as new_zipf:
+                for file in files:
+                    file_name = file.replace(folder + '/', '', 1)
+                    if file_name:
+                        new_zipf.writestr(file_name, zipf.read(file))
+            
+            try:      
+                copy_dataset(new_dataset_path, name)
+            finally:
+                os.remove(new_dataset_path)
+                return
+    
+    destiny = os.path.join('app', 'static', 'datasets')
+    os.makedirs(destiny, exist_ok=True)
+    shutil.copy(dataset_path, os.path.join(destiny, name + '.zip'))
